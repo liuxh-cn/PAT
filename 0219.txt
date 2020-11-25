@@ -1,0 +1,31 @@
+/*
+bool HashTable[128] = {false};
+
+if(c <= 'a' && c >= 'z') c -= 32; //化为大写
+*/
+
+Hash 用内容做索引，直接找到项
+
+gets()输入带空格的字符串//查刘汝佳
+scanf("%s", chars);
+scanf("%c", &char);
+
+HashTable的典型
+char dict[6] = {'P', 'A', 'T', 'e', 's', 't'};
+
+ascii码一共多少 128？
+
+A1048 从头到尾	for(int i = 1; i < sum/2 + 1; i++){
+
+
+if(p_num != 1 || t_num != 1 || t_loc - p_loc <= 1 || other > 0){
+相邻索引差为1
+
+0220:
+数组元素循环右移！！！
+
+typedef long long ll
+
+int gcd(int a, int b)
+
+!!!5.3 A1081 分数相加

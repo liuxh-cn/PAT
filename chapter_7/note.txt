@@ -1,0 +1,4 @@
+	int a, c;
+	char b;
+	for(int i = 0; i < n; i++){
+		scanf("%d %c %d", &a, &b, &c);
