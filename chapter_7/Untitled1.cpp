@@ -1,35 +1,53 @@
-#include <cstdio>
-#include <algorithm>
-#include <vector>
+#include <bits/stdc++.h>
 
 using namespace std;
-const int maxn = 100010;
 
-struct Node
+const int maxn = 1010;
+struct Mouse
 {
-	int address, data, next;
-	int order;
-}node[maxn];
+	int w, r;
+};
+Mouse mouse[maxn], tmp, maxm;
+queue<Mouse> q;
+int NP, NG, groups;
 
-bool cmp(Node a, Node b){
-	return a.order < b.order;
-}
+
 int main(){
-	vector<int> v1, v2;
-	v1.push_back(1);
-	v1.push_back(2);
-	v1.push_back(3);
-	v1.push_back(4);
 
-	v2 = v1;//值复制，非传递地址，操作的是不同的内存
-	v1.pop_back();
-	for(int i = 0; i < v2.size(); i++){
-		int ans = v2[i];
-		printf("%d\n", ans);
+	freopen("A1056.in", "r", stdin);
+
+	scanf("%d %d", &NP, &NG);
+
+	for(int i = 0; i < NP; ++i){
+		scanf("%d", &mouse[i].w);
 	}
-	printf("\n");
-	for(int i = 0; i < v1.size(); i++){
-		printf("%d\n", v1[i]);
-	}
-	return 0;
+	   
+
+	// while(q.size() != 1){
+	// 	if(NP % NG == 0)
+	// 		groups = NP / NG;
+	// 	else 
+	// 		groups = NP / NG + 1;
+	// 	int all = q.size(), p=0;
+	// 	for(int i = 0; i < groups; ++i){
+	// 		maxm.w = 0;
+	// 		for(int ii = 0; ii < NG; ++ii){
+	// 			if(p == all) break;
+	// 			tmp = q.back(); tmp.r = groups + 1;
+	// 			if(tmp.w > maxm.w){
+	// 				maxm = tmp;
+	// 			}
+	// 			++p;
+	// 		}
+	// 		q.push(maxm);
+	// 		cout << maxm.w << " ";
+	// 	}
+	// 	cout << endl;
+	// }
+
+
+
+
+
+
 }

@@ -1,82 +1,71 @@
-#include <cstdio>
-#include <cstring>
-#include <queue>
-#include <vector>
+#include <bits/stdc++.h>
 
 using namespace std;
+
 const int maxn = 1010;
-int n, l;
 struct Node
 {
-	int id, layer = 0;
+	int id;
+	int layer;
 };
+vector<Node> adj[maxn];
+bool vis[maxn] = {false};
 
-vector<Node> Adj[maxn];
-bool inq[maxn] = {false};
-
-int DFS(int s){
+int BFS(int s, int L){
 	int numForward = 0;
-	queue<Node> q;
-	Node start;
-	start.id = s;
-	start.layer = 0;
-	q.push(start);
-	inq[s] = true;
+
+	Node start; start.id = s; start.layer = 0;
+	queue<Node> q; q.push(start);
+	vis[start.id] = true;
 	while(!q.empty()){
-		Node top = q.front();
-		q.pop();
-		vector<Node> nexts = Adj[top.id];
-		for(int i = 0; i < nexts.size(); i++){
-			Node next = nexts[i];
-			next.layer = top.layer + 1;
-			if(!inq[next.id] && next.layer <= l){
-				numForward ++;
-				inq[next.id] = true;
+		Node tmp = q.front(); q.pop();
+
+		// do sth
+		// if(!vis[tmp.id] && tmp.layer <= L){
+		// 	vis[tmp.id] = true;
+		// 	++numForward;
+		// }
+
+		int tmpid = tmp.id;
+		for(int i = 0; i < adj[tmpid].size(); ++i){
+			Node next = adj[tmpid][i];
+			next.layer = tmp.layer + 1;
+			if(!vis[next.id] && next.layer <= L){
 				q.push(next);
+
+				// do sth
+				vis[next.id] = true;
+				++numForward;
 			}
 		}
 	}
-
 	return numForward;
 }
-
 
 int main(){
 	freopen("A1076.in", "r", stdin);
 
-	scanf("%d%d", &n, &l);
-	int numFollow, idFollow;
-	Node node;
-	for(int i = 1; i <= n; i++){
-		scanf("%d", &numFollow);
-		node.id = i;
-		for(int j = 0; j < numFollow; j++){
-			scanf("%d", &idFollow);
-			Adj[idFollow].push_back(node);
+	int N, L, numPoster, idPoster;
+	scanf("%d%d", &N, &L);
+
+	Node user;
+	for(int i = 1; i <= N; ++i){
+		user.id = i;
+		scanf("%d", &numPoster);
+		for(int j = 0; j < numPoster; ++j){
+			scanf("%d", &idPoster);
+			adj[idPoster].push_back(user);
 		}
 	}
 
-	int numQuery, idQuery, numForward;
-	scanf("%d", &numQuery);
-	for(int i = 0; i < numQuery; i++){
-		scanf("%d", &idQuery);
-		memset(inq, false, sizeof(inq));
-		numForward = DFS(idQuery);
-		printf("%d\n", numForward);
+	int numq, qid;
+	scanf("%d", &numq);
+	for(int i = 0; i < numq; ++i){
+		memset(vis, false, sizeof(vis));
+		scanf("%d", &qid);
+
+		int ans = BFS(qid, L);
+		printf("%d\n", ans);
+
 	}
-
-
-	//output
-	printf("------------\n");
-	printf("%d %d\n", n, l);
-	for(int i = 1; i <= n; i++){
-		for(int j = 0; j < Adj[i].size(); j++){
-			printf("%d ", Adj[i][j]);
-		}
-		printf("\n");
-	}
-
-	return 0;
 }
-
-

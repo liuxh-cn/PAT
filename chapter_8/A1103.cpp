@@ -1,65 +1,110 @@
-#include <iostream>
-#include <algorithm>
-#include <vector>
+#include <bits/stdc++.h>
 
 using namespace std;
 
-int n, k, p, maxFacSum = -1;
-vector<int> fac, temp, ans;
+int N, K, P;
 
-int power(int x){
-
-	int ans = 1;
-	for(int i = 0; i < p; i++){
-		ans *= x;
-	}
-	return ans;
+vector<int> fac;
+int power(int n){
+	// n^P
+	int res = 1;
+	for(int i = 0; i < P; ++i)
+		res *= n;
+	return res;
 }
 
+// !
 void init(){
-	int temp = 0, i = 0;
-	while(temp < n){
-		fac.push_back(temp);
-		temp = power(++i);
+	int i = 0, tmp = 0;
+	// ! <=
+	while(tmp <= N){
+		fac.push_back(tmp);
+		tmp = power(++i);
 	}
 }
 
-void DFS(int index, int nowK, int sum, int facSum){
-	if(nowK == k && sum == n){
-		if(facSum > maxFacSum){
-			ans = temp;
-			maxFacSum = facSum;
+
+vector<int> tmp, ans;
+int maxfacs = 0;
+
+// void DFS(int now, int nows, int nowk, int facs){
+// 	if(nows == N && nowk == K){
+// 		if(facs > maxfacs){
+// 			ans = tmp;
+// 			maxfacs = facs;
+// 		}
+
+// 		// for(int i = 0; i < K; ++i)
+// 		// 	cout << tmp[i] << " ";
+// 		// cout << endl;
+
+// 		return;
+// 	}
+// 	if(nows > N || nowk > K || now <= 0)
+// 		return;
+
+// 	// 1
+// 	tmp.push_back(now);
+// 	DFS(now, nows + fac[now], nowk + 1, facs + now);
+// 	tmp.pop_back();
+// 	// 0
+// 	DFS(now - 1, nows, nowk, facs);
+
+// }
+
+void DFS(int now, int nows, int nowk, int facs){
+	// now + tmp - route
+	// nows nowk - bound
+	// facs      - optim
+	if(nows == N && nowk == K){
+		if(facs > maxfacs){
+			ans = tmp;
+			maxfacs = facs;
 		}
+
+		// for(int i = 0; i < K; ++i)
+		// 	cout << tmp[i] << " ";
+		// cout << endl;
+
 		return;
 	}
-	if(nowK > k || sum > n) return;
-	if(index >= 1){
-		temp.push_back(index);
-		DFS(index, nowK+1, sum+fac[index], facSum+index);//当前index
-		temp.pop_back();
-		DFS(index-1, nowK, sum, facSum);//下一index
-	}
+	if(nows > N || nowk > K)
+		return;
 
+	for(int i = now; i > 0; --i){
+		tmp.push_back(i);
+		DFS(i, nows + fac[i], nowk + 1, facs + i);
+		tmp.pop_back();
+	}
 
 }
 
-int main(int argc, char *argv[])
-{
-	freopen("A1103.in", "r", stdin);
-	freopen("A1103.out", "w", stdout);
+
+int main(){
+
+	freopen("in", "r", stdin);
+
+	scanf("%d %d %d", &N, &K, &P);
+	// cout << N << " " << K << " " << P << endl;
 
 
-	scanf("%d%d%d", &n, &k, &p);
 	init();
-	
-	DFS(fac.size() - 1, 0, 0, 0);
-	if(maxFacSum == -1) printf("IMPOSSIBLE\n");
-	else{
-		printf("%d=", n);
-		for(int i = 0; i < k; i++){
-			printf("%d^%d", ans[i], p);
-			if(i < k-1) printf("+");
-		}
+	// for(int i = 0; i < N; ++i)
+	// 	cout << fac[i] << " ";
+	// cout << endl;
+
+	DFS(fac.size()-1, 0, 0, 0);
+
+	// 169 = 6^2 + 6^2 + 6^2 + 6^2 + 5^2
+
+	if(ans.size() == K){
+		printf("%d = %d^%d", N, ans[0], P);
+		for(int i = 1; i < K; ++i)
+			printf(" + %d^%d", ans[i], P);
 	}
-	return 0;
+	else{
+		printf("Impossible");
+	}
+
+
 }

@@ -21,7 +21,6 @@ char subjects[] = {'A', 'C', 'E', 'M'};
 int main(int argc, char *argv[])
 {
 	freopen("A1012.in", "r", stdin);
-	freopen("A1012.out", "w", stdout);
 	memset(ans, -1, sizeof(ans));
 	//input
 	scanf("%d%d", &n, &m);

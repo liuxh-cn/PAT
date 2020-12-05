@@ -2,85 +2,51 @@
 
 using namespace std;
 
-
-string normalize(string str, int N){
-	string res;
-	// if (str == "0")
-	// 	return "0.0*10^0";
-	if (str[0] == '0'){
-		int p = 0;
-		while (str[p] == '0')
-			p += 1;
-
-		if (p == str.length())
-			str = "0";
-		else
-			str = str.substr(p, str.length() - p);
+string newString(string str, int n){
+	int k_nzero = -1, k_point = -1, k = 0;
+	for(int i = 0; i < str.length(); ++i){
+		if(k_nzero == -1 && str[i] != '0' && str[i] != '.') k_nzero = i;
+		if(k_point == -1 && str[i] == '.') k_point = i;
+		if(k_nzero != -1 && k_point != -1) break;
 	}
-	if (str[0] == '.')
-		str = "0" + str;
+	if(k_nzero == -1) k = 0;
+	else{
+		if(k_point == -1) k_point = str.length();
 
-	cout << str << endl;
-
-	int i = str.find(".");
-	string k;
-	if (i != -1){
-		if (str[0] == '0')
-			k = "0";
-		else
-			k = to_string(i);
-
-		if (str.length() - 1 <= N){
-			res = "0." + str.erase(i, 1);//  + i;
-			for (int j = str.length(); j < N; ++j)
-				res += "0";
-		}
-		else{
-			str.erase(i, 1);
-			res = "0." + str.substr(0, N);
-		}
-		res += "*10^";
-		res += k;
-	}else{
-		if (str[0] == '0')
-			k = "0";
-		else
-			k = to_string(str.length());
-
-		if (str.length() <= N){
-			res = "0." + str;
-			for (int j = str.length(); j < N; ++j)
-				res += "0";
-		}
-		else{
-			res = "0." + str.substr(0, N);
-		}
-		res += "*10^";
-		res += k;
+		if(k_point > k_nzero) k = k_point - k_nzero;
+		else k = k_point - k_nzero + 1;
 	}
+	// cout << k_nzero << k_point << endl;
+	string ans = "0.";
+	int i = k_nzero, num = 0;
+	while(i < str.length() && num < n){
+		if(str[i] != '.'){
+			ans += str[i];
+			// cout << ans << endl;
+			++num;
+		}
+		++i;
+	}
+	while(num++ < n) ans += '0';
 
+	return ans + "*10^" + to_string(k);
 
-	return res;
 }
 
 int main()
 {
-	
-	freopen("1060.in", "r", stdin);
-
+	freopen("in", "r", stdin);
 	int N;
-	string a, b;
+	string str1, str2;
+	scanf("%d", &N);
 
-	cin >> N >> a >> b;
-
-	string a_norm = normalize(a, N);
-	string b_norm = normalize(b, N);
-
-	if (a_norm == b_norm){
-		printf("YES %s", a_norm.c_str());
+	cin >> str1 >> str2;
+	str1 = newString(str1, N);
+	str2 = newString(str2, N);
+	if(str1 == str2){
+		printf("YES %s", str1.c_str());
 	}else{
-		printf("NO %s %s", a_norm.c_str(), b_norm.c_str());
+		printf("NO %s %s", str1.c_str(), str2.c_str());
 	}
-
-	return 0;
 }
+

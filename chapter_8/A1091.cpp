@@ -1,94 +1,95 @@
-#include <iostream>
-#include <algorithm>
-#include <queue>
-//pixel 是否存在stroke
-//inq 是否访问过
+#include <bits/stdc++.h>
+
 using namespace std;
 
-int m, n, slice, T;
-struct node
+int M, N, L, T;
+int brain[1300][130][65] = {0};
+bool flag[1300][130][65] = {false};
+struct Node
 {
-	int x, y, z;
-} Node;
-int pixel[1290][130][61];
-bool inq[1290][130][61] = {false};
-int X[6] = {1, -1, 0, 0, 0, 0};
+	int nslice, x, y;
+};
+Node tmp;
+int X[6] = {0, 0, 0, 0, 1, -1};
 int Y[6] = {0, 0, 1, -1, 0, 0};
-int Z[6] = {0, 0, 0, 0, 1, -1};
+int Z[6] = {1, -1, 0, 0, 0, 0};
 
-bool judge(int x, int y, int z){
-	if(x<0 || x>m || y<0 || y>n || z<0 || z>slice){//越界
+bool isValid(Node node){
+	if(node.x < 0 || node.x >= M || node.y < 0 || node.y >= N || node.nslice < 0 || node.nslice >= L)
 		return false;
-	}else if(inq[x][y][z] || pixel[x][y][z] == 0){//0 || 访问过
+	if(flag[node.x][node.y][node.nslice])
 		return false;
-	}
+	if(brain[node.x][node.y][node.nslice] == 0)
+		return false;
 	return true;
 }
 
-int BFS(int x, int y, int z){//一次BFS找到一个连续的块，所以使用一个单独的queue
-	int tot = 0;
-	Node.x = x, Node.y = y, Node.z = z;
-	queue<node> q;
-	q.push(Node);
-	inq[x][y][z] = true;
+int BFS(Node node){
+	queue<Node> q; q.push(node); flag[node.x][node.y][node.nslice] = true;
+
+	int nones = 0;
 	while(!q.empty()){
-		node top = q.front();
-		q.pop();
-		tot++;
-		for(int i = 0; i < 6; i++){
-			int newX = top.x + X[i];
-			int newY = top.y + Y[i];
-			int newZ = top.z + Z[i];
-			if(judge(newX, newY, newZ)){
-				Node.x = newX, Node.y = newY, Node.z = newZ;
-				q.push(Node);
-				inq[newX][newY][newZ] = true;
-			}
+		Node now = q.front(); q.pop();
+		++nones;
+		
+		cout << now.x << now.y << now.nslice << endl;
+
+		for(int i = 0; i < 6; ++i){
+			tmp.x = now.x + X[i];
+			tmp.y = now.y + Y[i];
+			tmp.nslice = now.nslice + Z[i];
+			if(isValid(tmp))
+				q.push(tmp); flag[tmp.x][tmp.y][tmp.nslice] = true;
 		}
 	}
-	if(tot >= T)
-		return tot;
-	else
-		return 0;
+
+	if(nones >= T) {
+
+		cout << ">T " << nones << endl;
+
+		return nones;
+	}
+	return 0;
 }
 
-int main(int argc, char *argv[])
-{
+
+
+int main(){
+
 	freopen("A1091.in", "r", stdin);
-	freopen("A1091.out", "w", stdout);
+	scanf("%d %d %d %d", &M, &N, &L, &T);
+	cout << M << N << L << T << endl;
+
+	for(int nslice = 0; nslice < L; ++nslice){
+		for(int x = 0; x < M; ++x){
+			for(int y = 0; y < N; ++y){
+				scanf("%d", &brain[x][y][nslice]);
+			}
+		}
+	}
+
+	// for(int nslice = 0; nslice < L; ++nslice){
+	// 	for(int x = 0; x < M; ++x){
+	// 		for(int y = 0; y < N; ++y){
+	// 			cout << brain[x][y][nslice] << " ";
+	// 		}
+	// 		cout << endl;
+	// 	}
+	// 	cout << endl;
+	// }
 
 	int ans = 0;
-	//输入
-	scanf("%d%d%d%d", &m, &n, &slice, &T);
-	for(int z = 0; z < slice; z++){
-		for(int i = 0; i < m; i++){
-			for(int j = 0; j < n; j++){
-				scanf("%d", &pixel[i][j][z]);
+	for(int nslice = 0; nslice < L; ++nslice){
+		for(int x = 0; x < M; ++x){
+			for(int y = 0; y < N; ++y){
+				Node start; 
+				start.x = x; start.y = y; start.nslice = nslice;
+				if(isValid(start)){
+					ans += BFS(start);
+				}
 			}
 		}
 	}
-	//处理
-	for(int z = 0; z < slice; z++){
-		for(int i = 0; i < m; i++){
-			for(int j = 0; j < n; j++){
-				if(pixel[i][j][z] == 1 && !inq[i][j][z])
-					ans += BFS(i, j, z);
-			}
-		}
-	}
-	
-	//输出
-	printf("%d\n", ans);
 
-	for(int z = 0; z < slice; z++){
-		for(int i = 0; i < m; i++){
-			for(int j = 0; j < n; j++){
-				printf("%d", pixel[i][j][z]);
-			}
-			printf("\n");
-		}
-	}
-
-
-	return 0;
+	cout << ans ;
 }

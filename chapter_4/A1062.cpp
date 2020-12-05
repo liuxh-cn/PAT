@@ -1,59 +1,51 @@
-#include <iostream>
-#include <algorithm>
-
+#include <bits/stdc++.h>
+// 2020-11-30
 using namespace std;
 
 const int maxn = 100010;
-int n, l, h;
+int N, L, H;
 struct Student
 {
-	int id, de, cai, sum;
+	int id;
+	int d, c, tatal_score;
 	int flag;
-} stu[maxn];
+};
+Student stu[maxn];
 
 bool cmp(Student a, Student b){
-	if(a.flag != b.flag){
-		return a.flag < b.flag;
-	}else if(a.sum != b.sum){
-		return a.sum > b.sum;
-	}else if(a.de != b.de){
-		return a.de > b.de;
-	}else{
-		return a.id < b.id;
-	}
+	if(a.flag != b.flag) return a.flag < b.flag;
+	if(a.tatal_score != b.tatal_score) return a.tatal_score > b.tatal_score;
+	if(a.d != b.d) return a.d > b.d;
+	return a.id < b.id;
 }
-int main(int argc, char *argv[])
-{
+
+
+int main(){
+
 	freopen("A1062.in", "r", stdin);
-	freopen("A1062.out", "w", stdout);
-	//input
-	scanf("%d%d%d", &n, &l, &h);
-	int num = n;
-	for(int i = 0; i < n; i++){
-		scanf("%d%d%d", &stu[i].id, &stu[i].de, &stu[i].cai);
-		stu[i].sum = stu[i].de + stu[i].cai;
-		if(stu[i].de < l || stu[i].cai < l){
-			stu[i].flag = 5;
-			num--;
-		}else if(stu[i].de >= h && stu[i].cai >= h){
-			stu[i].flag = 1;
-		}else if(stu[i].de >= h){
-			stu[i].flag = 2;
-		}else if(stu[i].de > stu[i].cai){
-			stu[i].flag = 3;
-		}else{
-			stu[i].flag = 4;
+	scanf("%d %d %d", &N, &L, &H);
+
+	Student tmp;
+	int num5 = 0;
+	for(int i = 0; i < N; ++i){
+		scanf("%d %d %d", &tmp.id, &tmp.d, &tmp.c);
+		tmp.tatal_score = tmp.d + tmp.c;
+		if(tmp.d < L || tmp.c < L) {
+			tmp.flag = 5; 
+			num5++;
 		}
+		else if(tmp.d >= H && tmp.c >= H) tmp.flag = 1;
+		else if(tmp.d >= H) tmp.flag = 2;
+		else if(tmp.d >= tmp.c) tmp.flag = 3;
+		else tmp.flag = 4;
+
+		stu[i] = tmp;
 	}
 
-	//process
-	sort(stu, stu + n, cmp);
-	//output
-	//printf("%d %d %d\n", n, l, h);
-	printf("%d\n", num);
-	for(int i = 0; i < num; i++){
-		printf("%d %d %d", stu[i].id, stu[i].de, stu[i].cai);
-		if(i < num - 1) printf("\n");
+	sort(stu, stu + N, cmp);
+	printf("%d\n", N - num5);
+	for(int i = 0; i < N - num5; ++i){
+		printf("%d %d %d\n", stu[i].id, stu[i].d, stu[i].c);
 	}
-	return 0;
+
 }
